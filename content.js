@@ -74,15 +74,31 @@ function setupObserver() {
           shouldProcessNode(mutation.target)) {
         processTextNode(mutation.target);
       }
+      
+      // Also process the parent element for attribute changes
+      // This helps catch changes to elements that might be using custom rendering
+      if (mutation.target && mutation.target.parentElement) {
+        processNode(mutation.target.parentElement);
+      }
     }
+    
+    // Periodically scan the whole document again for numbers
+    // This ensures we catch elements that might have been missed
+    setTimeout(() => maskAllNumbers(), 500);
   });
   
   // Start observing the document with the configured parameters
   observer.observe(document.body, { 
     childList: true, 
     subtree: true, 
-    characterData: true 
+    characterData: true,
+    attributes: true,
+    attributeFilter: ['textContent', 'innerText', 'innerHTML', 'value']
   });
+  
+  // Additional recurring scan to ensure we catch all numbers
+  // This helps with SPAs and dynamic content that might evade the observer
+  setInterval(maskAllNumbers, 2000);
 }
 
 // Process all existing numbers on the page
@@ -203,13 +219,29 @@ function processTextNode(node) {
     return;
   }
   
-  // Enhanced regex to catch all numeric values with different formats
-  // This covers currency with symbols, plain numbers, numbers with commas, decimals, etc.
-  const numberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
+  // First check: Basic number formats with currency symbols and decimals
+  const basicNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
+  
+  // Second check: Any standalone digit sequence (very aggressive)
+  const digitSequenceRegex = /\d+/g;
   
   // Replace all occurrences with the mask
-  if (numberRegex.test(node.textContent)) {
-    node.textContent = node.textContent.replace(numberRegex, '•••');
+  let text = node.textContent;
+  let hasNumbers = false;
+  
+  if (basicNumberRegex.test(text)) {
+    text = text.replace(basicNumberRegex, '•••');
+    hasNumbers = true;
+  }
+  
+  // If still contains digits, use the more aggressive approach
+  if (/\d/.test(text)) {
+    text = text.replace(digitSequenceRegex, '•••');
+    hasNumbers = true;
+  }
+  
+  if (hasNumbers) {
+    node.textContent = text;
   }
 }
 
