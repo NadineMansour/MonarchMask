@@ -2,6 +2,48 @@
 let cipherEnabled = false;
 let observer = null;
 
+// Helper function to get a unique CSS selector for an element
+function getUniqueSelector(element) {
+  if (!element) return '';
+  if (element.id) return '#' + element.id;
+  
+  // Try to use classes
+  if (element.className) {
+    const classes = element.className.split(' ')
+      .filter(c => c && !c.includes('cipher'))
+      .join('.');
+    if (classes) return '.' + classes;
+  }
+  
+  // Fallback to a position-based selector
+  let path = '';
+  while (element && element.tagName) {
+    let selector = element.tagName.toLowerCase();
+    let sibling = element;
+    let siblingCount = 0;
+    
+    while (sibling = sibling.previousElementSibling) {
+      if (sibling.tagName === element.tagName) {
+        siblingCount++;
+      }
+    }
+    
+    if (siblingCount > 0) {
+      selector += ':nth-of-type(' + (siblingCount + 1) + ')';
+    }
+    
+    path = selector + (path ? ' > ' + path : '');
+    
+    if (element.parentElement && element.parentElement.tagName) {
+      element = element.parentElement;
+    } else {
+      break;
+    }
+  }
+  
+  return path;
+}
+
 // Initialize the extension
 function initCipher() {
   // Check if this is Monarch Money
@@ -140,17 +182,14 @@ function overrideFinancialAppDisplays() {
             container.style.position = 'relative';
           }
           
-          // Make the number__inner element itself transparent
-          const numberInner = container.querySelector('.number__inner');
-          if (numberInner) {
-            numberInner.style.color = 'transparent';
-          } else {
-            // Fallback to making individual digit elements transparent
-            const digitElements = container.querySelectorAll('.digit, .digit__num');
-            digitElements.forEach(digitEl => {
-              digitEl.style.color = 'transparent';
-            });
-          }
+          // Just set container to have all text transparent - simpler approach
+          container.style.cssText += 'color: transparent !important;';
+          
+          // Also set inner elements to be transparent as a backup
+          const allInnerElements = container.querySelectorAll('*');
+          allInnerElements.forEach(el => {
+            el.style.color = 'transparent';
+          });
           
           container.appendChild(maskContainer);
         }
