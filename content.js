@@ -140,10 +140,10 @@ function overrideFinancialAppDisplays() {
             container.style.position = 'relative';
           }
           
-          // Hide all digit elements
-          const digitElements = container.querySelectorAll('.digit, .digit__num');
+          // Make all digit elements transparent instead of hiding them
+          const digitElements = container.querySelectorAll('.digit, .digit__num, .number__inner');
           digitElements.forEach(digitEl => {
-            digitEl.style.opacity = '0';
+            digitEl.style.color = 'transparent';
           });
           
           container.appendChild(maskContainer);
