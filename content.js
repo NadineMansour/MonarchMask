@@ -112,7 +112,7 @@ function overrideFinancialAppDisplays() {
       position: absolute !important;
       left: 0 !important;
       top: 0 !important;
-      color: currentColor !important;
+      color: white !important;
       background: inherit !important;
       z-index: 10000 !important;
     }
@@ -246,8 +246,8 @@ function overrideFinancialAppDisplays() {
       mask.style.pointerEvents = 'none';
       mask.style.zIndex = '1000';
       mask.style.backgroundColor = 'transparent';
-      // Set a specific color to ensure the dots are visible
-      mask.style.color = '#333';
+      // Set a specific color to ensure the dots are visible in any theme
+      mask.style.color = 'white';
       
       // Make parent relative for absolute positioning
       if (window.getComputedStyle(inputParent).position === 'static') {
@@ -509,7 +509,7 @@ function maskAllNumbers() {
       mask.style.alignItems = 'center';
       mask.style.justifyContent = 'center';
       mask.style.zIndex = '10000';
-      mask.style.color = '#333';
+      mask.style.color = 'white';
       mask.style.pointerEvents = 'none';
       
       parent.appendChild(mask);
