@@ -33,8 +33,93 @@ function startMasking() {
   // First, mask existing content
   maskAllNumbers();
   
+  // Specifically target table cells and grid layouts 
+  // This helps with financial apps like Monarch Money
+  maskTableData();
+  
   // Set up observer for new content
   setupObserver();
+}
+
+// Specifically mask content in tables and grid layouts
+function maskTableData() {
+  // Target table cells (td elements)
+  const tableCells = document.querySelectorAll('td');
+  tableCells.forEach(cell => {
+    // Process each table cell directly
+    processTextInElement(cell);
+  });
+  
+  // Target div elements that might be acting as cells in a grid layout
+  // (common in modern web apps that use CSS Grid or Flexbox for tables)
+  const divCells = document.querySelectorAll('div');
+  divCells.forEach(div => {
+    // Check if this div might be a grid/table cell
+    const style = window.getComputedStyle(div);
+    const text = div.textContent.trim();
+    
+    // If the div contains a number and looks like it could be a cell
+    // (short text content, specific display types)
+    if (text.length < 20 && /\d/.test(text) && 
+        (style.display.includes('flex') || 
+         style.display.includes('grid') || 
+         style.display.includes('table'))) {
+      processTextInElement(div);
+    }
+  });
+}
+
+// Process all text inside an element directly
+function processTextInElement(element) {
+  if (!element || !shouldProcessNode(element)) return;
+  
+  // Apply the same regex from processTextNode function
+  const basicNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
+  const digitSequenceRegex = /\d+/g;
+  
+  // Handle immediate text in this element (not in children)
+  for (const node of element.childNodes) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      let text = node.textContent;
+      let hasNumbers = false;
+      
+      if (basicNumberRegex.test(text)) {
+        text = text.replace(basicNumberRegex, '•••');
+        hasNumbers = true;
+      }
+      
+      // If still contains digits, use the more aggressive approach
+      if (/\d/.test(text)) {
+        text = text.replace(digitSequenceRegex, '•••');
+        hasNumbers = true;
+      }
+      
+      if (hasNumbers) {
+        node.textContent = text;
+      }
+    }
+  }
+  
+  // In case the element has no child text nodes but has direct textContent
+  if (element.childNodes.length === 0 && element.textContent.trim() !== '') {
+    let text = element.textContent;
+    let hasNumbers = false;
+    
+    if (basicNumberRegex.test(text)) {
+      text = text.replace(basicNumberRegex, '•••');
+      hasNumbers = true;
+    }
+    
+    // If still contains digits, use the more aggressive approach
+    if (/\d/.test(text)) {
+      text = text.replace(digitSequenceRegex, '•••');
+      hasNumbers = true;
+    }
+    
+    if (hasNumbers) {
+      element.textContent = text;
+    }
+  }
 }
 
 // Stop the masking process
