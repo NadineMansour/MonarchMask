@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Cipher",
+  "name": "MonarchMask",
   "version": "1.0.0",
   "description": "Masks numeric values on web pages for privacy when sharing screens",
   "permissions": [
