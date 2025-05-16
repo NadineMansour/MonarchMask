@@ -203,9 +203,9 @@ function processTextNode(node) {
     return;
   }
   
-  // Regex to match numbers with optional currency symbols, commas, periods and percent
-  // This will match standalone numbers, currency amounts, percentages, etc.
-  const numberRegex = /(\$|€|£|¥)?[\d,]+(\.\d+)?(%)?/g;
+  // Improved regex to match numbers with currency symbols, commas, periods and percent
+  // Handles cases where currency symbol might have a space after it or standalone numbers
+  const numberRegex = /(\$|€|£|¥)[ ]?[\d,]+(\.\d+)?(%)?|\b\d+(\.\d+)?(%)?/g;
   
   // Replace all occurrences with the mask
   if (numberRegex.test(node.textContent)) {
