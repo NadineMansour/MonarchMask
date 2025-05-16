@@ -7,30 +7,31 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  width: 280px;
-  background-color: #f9f9f9;
-  color: #333;
+  width: 300px;
+  background-color: white;
+  color: #1c1c1e;
 }
 
 .container {
-  padding: 16px;
+  padding: 20px;
 }
 
 /* Header styles */
 .header {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 h1 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #1c1c1e;
 }
 
 .description {
-  font-size: 12px;
-  color: #7f8c8d;
+  font-size: 16px;
+  color: #646464;
+  font-weight: 400;
 }
 
 /* Toggle switch styles */
@@ -39,20 +40,20 @@ h1 {
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid #eee;
   margin-bottom: 12px;
 }
 
 .toggle-label {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
+  color: #1c1c1e;
 }
 
 .switch {
   position: relative;
   display: inline-block;
-  width: 48px;
-  height: 24px;
+  width: 58px;
+  height: 32px;
 }
 
 .switch input {
@@ -68,19 +69,20 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #e9e9ea;
   transition: .4s;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
+  height: 28px;
+  width: 28px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
   transition: .4s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 input:checked + .slider {
@@ -92,7 +94,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(24px);
+  transform: translateX(26px);
 }
 
 .slider.round {
@@ -101,6 +103,13 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+/* Divider */
+.divider {
+  height: 1px;
+  background-color: #e9e9ea;
+  margin: 12px 0;
 }
 
 /* Status styles */
@@ -112,26 +121,17 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   margin-bottom: 8px;
-  font-size: 13px;
+  font-size: 16px;
 }
 
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: 8px;
-}
-
-.active-dot {
-  background-color: #27ae60;
-}
-
-.inactive-dot {
-  background-color: #e74c3c;
+.status-icon {
+  margin-right: 10px;
+  font-size: 18px;
 }
 
 .status-text {
-  color: #555;
+  color: #1c1c1e;
+  font-weight: 400;
 }
 
 /* Hide the inactive status by default */

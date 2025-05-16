@@ -159,8 +159,8 @@ function overrideFinancialAppDisplays() {
     
     // Only add the mask if we haven't already
     if (!inputParent.querySelector('.monarch-mask-overlay')) {
-      // Hide the original input
-      input.style.opacity = '0';
+      // Hide the original input but ensure it's still functional
+      input.style.color = 'transparent';
       
       // Create and insert the mask
       const mask = document.createElement('div');
@@ -178,6 +178,7 @@ function overrideFinancialAppDisplays() {
       mask.style.pointerEvents = 'none';
       mask.style.zIndex = '1000';
       mask.style.backgroundColor = 'transparent';
+      mask.style.color = input.style.color || 'inherit';
       
       // Make parent relative for absolute positioning
       if (window.getComputedStyle(inputParent).position === 'static') {
