@@ -52,8 +52,8 @@ h1 {
 .switch {
   position: relative;
   display: inline-block;
-  width: 58px;
-  height: 32px;
+  width: 50px;
+  height: 28px;
 }
 
 .switch input {
@@ -76,8 +76,8 @@ h1 {
 .slider:before {
   position: absolute;
   content: "";
-  height: 28px;
-  width: 28px;
+  height: 24px;
+  width: 24px;
   left: 2px;
   bottom: 2px;
   background-color: white;
@@ -94,7 +94,7 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(22px);
 }
 
 .slider.round {
