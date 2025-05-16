@@ -4,6 +4,14 @@ let observer = null;
 
 // Initialize the extension
 function initCipher() {
+  // Check if this is Monarch Money
+  const isMonarchMoney = window.location.hostname.includes('monarchmoney.com');
+  
+  // Only run on Monarch Money
+  if (!isMonarchMoney) {
+    return;
+  }
+  
   // Check initial state from storage
   chrome.storage.local.get('cipherEnabled', (data) => {
     cipherEnabled = data.cipherEnabled || false;
