@@ -37,8 +37,89 @@ function startMasking() {
   // This helps with financial apps like Monarch Money
   maskTableData();
   
+  // Override content display for financial apps
+  overrideFinancialAppDisplays();
+  
   // Set up observer for new content
   setupObserver();
+}
+
+// Specifically target financial app displays with special handling
+function overrideFinancialAppDisplays() {
+  // Use CSS to mask numbers in table cells and common financial app elements
+  const style = document.createElement('style');
+  style.id = 'cipher-finance-style';
+  style.textContent = `
+    /* Hide actual text content but keep the element dimensions */
+    .cipher-masked {
+      color: transparent !important;
+      position: relative !important;
+    }
+    
+    /* Add masked content overlay */
+    .cipher-masked::before {
+      content: '•••' !important;
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      color: currentColor !important;
+      background: inherit !important;
+      z-index: 10000 !important;
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Apply masking to all cells with dollar amounts and numbers
+  // Use a variety of selectors to target financial app interfaces
+  const potentialFinancialElements = document.querySelectorAll(
+    // Target elements that likely contain financial data
+    '[class*="amount"], [class*="balance"], [class*="budget"], [class*="price"], ' +
+    '[class*="cost"], [class*="total"], [class*="value"], [class*="money"], ' +
+    '[class*="currency"], [class*="number"], [id*="amount"], [id*="balance"], ' +
+    '[id*="budget"], [id*="price"], [id*="cost"], [id*="total"], [id*="value"], ' +
+    // Target common table cells in financial tables
+    'td, th, [role="cell"], [role="gridcell"], ' + 
+    // Target specific cell-like structures 
+    '[style*="display: grid"] > div, [style*="display: flex"] > div'
+  );
+  
+  potentialFinancialElements.forEach(element => {
+    // Check if the element contains a number
+    const text = element.textContent.trim();
+    const hasNumber = /\d/.test(text);
+    
+    // Skip already masked or very large text blocks
+    if (!hasNumber || text.length > 50) return;
+    
+    // Skip form inputs and editable fields
+    if (element.tagName === 'INPUT' || 
+        element.tagName === 'TEXTAREA' || 
+        element.tagName === 'SELECT' ||
+        element.hasAttribute('contenteditable')) {
+      return;
+    }
+    
+    // Check if the element might be a financial value
+    const isCurrencyValue = 
+      /^\s*\$\s*\d/.test(text) || // Starts with $ followed by number
+      /^\s*\d+([.,]\d+)*(\.\d+)?\s*$/.test(text) || // Just a number
+      /^\s*\d+([.,]\d+)*(\.\d+)?\s*%\s*$/.test(text); // Percentage
+    
+    if (isCurrencyValue) {
+      // Mark as masked through classes for styling
+      element.classList.add('cipher-masked');
+      
+      // If Monarch Money is detected, apply additional specific masking
+      if (window.location.hostname.includes('monarchmoney')) {
+        // Apply more specific selectors for Monarch Money
+        if (element.closest('[class*="budget"]') || 
+            element.closest('[class*="amount"]')) {
+          element.classList.add('cipher-masked');
+          element.setAttribute('data-original-text', element.textContent);
+        }
+      }
+    }
+  });
 }
 
 // Specifically mask content in tables and grid layouts
