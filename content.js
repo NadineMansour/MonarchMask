@@ -105,15 +105,22 @@ function overrideFinancialAppDisplays() {
   const monarchInputs = document.querySelectorAll('input[class*="CurrencyInput"], input[class*="AmountInput"], input[name="budgeted"], input.fs-exclude');
   
   // Target the special animated digit display in Monarch Money
-  const specialDigitElements = document.querySelectorAll('.number__inner, .digit, .digit__num, [part="digit"], [part="integer"], [part="fraction"]');
+  const specialDigitElements = document.querySelectorAll('.number__inner, .digit, .digit__num, [part="digit"], [part="integer"], [part="fraction"], [class*="Balance"], [class*="balance"], [class*="totalAmount"], [class*="TotalAmount"]');
   
   // Process animated digit displays
   specialDigitElements.forEach(element => {
-    // Check if this element is a number display container
-    if (element.classList.contains('number__inner') || element.hasAttribute('part')) {
+    // Check if this element is a number display container or has balance/amount classes
+    if (element.classList.contains('number__inner') || 
+        element.hasAttribute('part') || 
+        element.className.toLowerCase().includes('balance') || 
+        element.className.toLowerCase().includes('amount')) {
+      
       // Find the parent container to apply masking
       let container = element;
-      while (container && !container.matches('[class*="balance"], [class*="value"], .number, [class*="amount"]') && container !== document.body) {
+      // Look for common container elements in financial displays
+      while (container && 
+             !container.matches('[class*="balance"], [class*="Balance"], [class*="value"], [class*="amount"], [class*="Amount"], .number, [class*="summary"], [class*="total"]') && 
+             container !== document.body) {
         container = container.parentElement;
       }
       
@@ -134,15 +141,24 @@ function overrideFinancialAppDisplays() {
           maskContainer.style.backgroundColor = 'inherit';
           maskContainer.style.zIndex = '10000';
           maskContainer.style.pointerEvents = 'none';
+          maskContainer.style.color = '#333'; // Ensure visible color
           
           // Make the container relative for positioning
           if (window.getComputedStyle(container).position === 'static') {
             container.style.position = 'relative';
           }
           
+          // Hide all text/digit content
+          Array.from(container.childNodes).forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE && /\d/.test(node.textContent)) {
+              node.textContent = '';
+            }
+          });
+          
           // Hide all digit elements
-          const digitElements = container.querySelectorAll('.digit, .digit__num');
+          const digitElements = container.querySelectorAll('.digit, .digit__num, [class*="Balance"], [class*="Amount"]');
           digitElements.forEach(digitEl => {
+            digitEl.style.color = 'transparent';
             digitEl.style.opacity = '0';
           });
           
