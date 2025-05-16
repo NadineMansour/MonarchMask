@@ -125,6 +125,13 @@ function overrideFinancialAppDisplays() {
       opacity: 0 !important;
     }
     
+    /* Target number-flow elements directly */
+    number-flow-react,
+    .fs-mask,
+    [data-testid="budget-amount"] {
+      color: transparent !important;
+    }
+    
     /* Strong masking for Monarch Money budget page */
     td[data-testid] span:not(.monarch-mask-overlay) {
       color: transparent !important;
@@ -474,12 +481,21 @@ function setupObserver() {
 
 // Process all existing numbers on the page
 function maskAllNumbers() {
-  // Special handling for the budget summary box in the top right
-  const summaryBoxes = document.querySelectorAll('[class*="budget-summary"], [class*="summary"]');
-  summaryBoxes.forEach(box => {
-    // Create mask overlay
-    if (!box.querySelector('.monarch-special-mask')) {
-      // Add mask
+  // Special handling for the budget summary box in the top right - specifically target number-flow-react
+  const numberFlowElements = document.querySelectorAll('number-flow-react, .fs-mask');
+  numberFlowElements.forEach(element => {
+    // Make the element and all its children transparent
+    element.style.color = 'transparent';
+    
+    // Create an overlay with dots if not already present
+    const parent = element.parentElement;
+    if (parent && !parent.querySelector('.monarch-special-mask')) {
+      // Position the parent for absolute positioning
+      if (window.getComputedStyle(parent).position === 'static') {
+        parent.style.position = 'relative';
+      }
+      
+      // Create the mask overlay
       const mask = document.createElement('div');
       mask.className = 'monarch-special-mask';
       mask.textContent = '•••';
@@ -488,27 +504,15 @@ function maskAllNumbers() {
       mask.style.left = '0';
       mask.style.width = '100%';
       mask.style.height = '100%';
-      mask.style.backgroundColor = 'inherit';
+      mask.style.backgroundColor = 'transparent';
       mask.style.display = 'flex';
       mask.style.alignItems = 'center';
       mask.style.justifyContent = 'center';
       mask.style.zIndex = '10000';
       mask.style.color = '#333';
+      mask.style.pointerEvents = 'none';
       
-      // Make all text in this box transparent
-      const allElements = box.querySelectorAll('*');
-      allElements.forEach(el => {
-        if (el.textContent && /\d/.test(el.textContent)) {
-          el.style.color = 'transparent';
-        }
-      });
-      
-      // Make the box itself positioned for the overlay
-      if (window.getComputedStyle(box).position === 'static') {
-        box.style.position = 'relative';
-      }
-      
-      box.appendChild(mask);
+      parent.appendChild(mask);
     }
   });
 
