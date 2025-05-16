@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cipher</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Cipher</h1>
+      <p class="description">Mask numbers for privacy when sharing screens</p>
+    </div>
+    
+    <div class="toggle-container">
+      <span class="toggle-label">Mask Numbers</span>
+      <label class="switch">
+        <input type="checkbox" id="cipherToggle">
+        <span class="slider round"></span>
+      </label>
+    </div>
+    
+    <div class="status-container">
+      <div id="status-on" class="status">
+        <span class="status-dot active-dot"></span>
+        <span class="status-text">Numbers are masked</span>
+      </div>
+      <div id="status-off" class="status">
+        <span class="status-dot inactive-dot"></span>
+        <span class="status-text">Numbers are visible</span>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

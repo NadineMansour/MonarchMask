@@ -1,0 +1,40 @@
+modules = ["nodejs-20", "python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Chrome Extension Server"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "test_cipher_extension"
+
+[[workflows.workflow]]
+name = "Chrome Extension Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python -m http.server 5000"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "test_cipher_extension"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "google-chrome --load-extension=$(pwd) --no-first-run --no-default-browser-check --user-data-dir=/tmp/chrome-profile --no-sandbox \"https://www.amazon.com\""
+
+[deployment]
+run = ["sh", "-c", "python -m http.server 5000"]
