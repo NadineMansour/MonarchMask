@@ -80,7 +80,7 @@ function overrideFinancialAppDisplays() {
     input[class*="AmountInput"],
     input[name="budgeted"],
     input.fs-exclude {
-      opacity: 0 !important;
+      color: transparent !important;
     }
     
     /* Use JavaScript to insert dots for these fields instead of CSS */
@@ -178,7 +178,8 @@ function overrideFinancialAppDisplays() {
       mask.style.pointerEvents = 'none';
       mask.style.zIndex = '1000';
       mask.style.backgroundColor = 'transparent';
-      mask.style.color = input.style.color || 'inherit';
+      // Set a specific color to ensure the dots are visible
+      mask.style.color = '#333';
       
       // Make parent relative for absolute positioning
       if (window.getComputedStyle(inputParent).position === 'static') {
