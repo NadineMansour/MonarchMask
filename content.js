@@ -96,6 +96,55 @@ function overrideFinancialAppDisplays() {
   // Specifically target Monarch Money input fields - these need special handling
   const monarchInputs = document.querySelectorAll('input[class*="CurrencyInput"], input[class*="AmountInput"], input[name="budgeted"], input.fs-exclude');
   
+  // Target the special animated digit display in Monarch Money
+  const specialDigitElements = document.querySelectorAll('.number__inner, .digit, .digit__num, [part="digit"], [part="integer"], [part="fraction"]');
+  
+  // Process animated digit displays
+  specialDigitElements.forEach(element => {
+    // Check if this element is a number display container
+    if (element.classList.contains('number__inner') || element.hasAttribute('part')) {
+      // Find the parent container to apply masking
+      let container = element;
+      while (container && !container.matches('[class*="balance"], [class*="value"], .number, [class*="amount"]') && container !== document.body) {
+        container = container.parentElement;
+      }
+      
+      if (container) {
+        // Create a mask if it doesn't exist yet
+        if (!container.querySelector('.monarch-digit-mask')) {
+          const maskContainer = document.createElement('div');
+          maskContainer.className = 'monarch-digit-mask';
+          maskContainer.textContent = '•••';
+          maskContainer.style.position = 'absolute';
+          maskContainer.style.left = '0';
+          maskContainer.style.top = '0';
+          maskContainer.style.width = '100%';
+          maskContainer.style.height = '100%';
+          maskContainer.style.display = 'flex';
+          maskContainer.style.alignItems = 'center';
+          maskContainer.style.justifyContent = 'center';
+          maskContainer.style.backgroundColor = 'inherit';
+          maskContainer.style.zIndex = '10000';
+          maskContainer.style.pointerEvents = 'none';
+          
+          // Make the container relative for positioning
+          if (window.getComputedStyle(container).position === 'static') {
+            container.style.position = 'relative';
+          }
+          
+          // Hide all digit elements
+          const digitElements = container.querySelectorAll('.digit, .digit__num');
+          digitElements.forEach(digitEl => {
+            digitEl.style.opacity = '0';
+          });
+          
+          container.appendChild(maskContainer);
+        }
+      }
+    }
+  });
+  
+  // Process input fields
   monarchInputs.forEach(input => {
     // Create a visible mask for the input
     const inputParent = input.parentElement;
