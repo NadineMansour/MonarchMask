@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "MonarchMask",
   "version": "1.0.0",
-  "description": "Masks numeric values on web pages for privacy when sharing screens",
+  "description": "Mask numbers while screen-sharing",
   "permissions": [
     "storage",
     "activeTab"
