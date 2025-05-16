@@ -66,6 +66,39 @@ function overrideFinancialAppDisplays() {
       background: inherit !important;
       z-index: 10000 !important;
     }
+    
+    /* Specifically target Monarch Money currency inputs */
+    .CurrencyInput__Input-ay6xtd-0,
+    .PlanCell__AmountInput-ubpe1q-1,
+    input[name="budgeted"],
+    input.fs-exclude,
+    input[class*="CurrencyInput"],
+    input[class*="AmountInput"] {
+      color: transparent !important;
+      position: relative !important;
+    }
+    
+    /* Add overlay for Monarch Money currency inputs */
+    .CurrencyInput__Input-ay6xtd-0::before,
+    .PlanCell__AmountInput-ubpe1q-1::before,
+    input[name="budgeted"]::before,
+    input.fs-exclude::before,
+    input[class*="CurrencyInput"]::before,
+    input[class*="AmountInput"]::before {
+      content: '•••' !important;
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      color: currentColor !important;
+      background: inherit !important;
+      z-index: 10000 !important;
+      display: flex !important;
+      align-items: center !important;
+      padding: 0 8px !important;
+      pointer-events: none !important;
+    }
   `;
   document.head.appendChild(style);
   
