@@ -134,17 +134,7 @@ function overrideFinancialAppDisplays() {
     [class*="balance"] span:not(.monarch-mask-overlay),
     [class*="spending"] span:not(.monarch-mask-overlay),
     [class*="value"] span:not(.monarch-mask-overlay),
-    [class*="amount"] span:not(.monarch-mask-overlay),
-    h1, h2, h3, h4 {
-      color: transparent !important;
-    }
-    
-    /* Target the top-right budget summary box */
-    [class*="budget"] h1, 
-    [class*="budget"] h2, 
-    [class*="budget"] h3,
-    [class*="budget"] span,
-    [class*="remaining"] span {
+    [class*="amount"] span:not(.monarch-mask-overlay) {
       color: transparent !important;
     }
     
@@ -484,6 +474,44 @@ function setupObserver() {
 
 // Process all existing numbers on the page
 function maskAllNumbers() {
+  // Special handling for the budget summary box in the top right
+  const summaryBoxes = document.querySelectorAll('[class*="budget-summary"], [class*="summary"]');
+  summaryBoxes.forEach(box => {
+    // Create mask overlay
+    if (!box.querySelector('.monarch-special-mask')) {
+      // Add mask
+      const mask = document.createElement('div');
+      mask.className = 'monarch-special-mask';
+      mask.textContent = '•••';
+      mask.style.position = 'absolute';
+      mask.style.top = '0';
+      mask.style.left = '0';
+      mask.style.width = '100%';
+      mask.style.height = '100%';
+      mask.style.backgroundColor = 'inherit';
+      mask.style.display = 'flex';
+      mask.style.alignItems = 'center';
+      mask.style.justifyContent = 'center';
+      mask.style.zIndex = '10000';
+      mask.style.color = '#333';
+      
+      // Make all text in this box transparent
+      const allElements = box.querySelectorAll('*');
+      allElements.forEach(el => {
+        if (el.textContent && /\d/.test(el.textContent)) {
+          el.style.color = 'transparent';
+        }
+      });
+      
+      // Make the box itself positioned for the overlay
+      if (window.getComputedStyle(box).position === 'static') {
+        box.style.position = 'relative';
+      }
+      
+      box.appendChild(mask);
+    }
+  });
+
   // Process all text nodes in the document
   const treeWalker = document.createTreeWalker(
     document.body,
