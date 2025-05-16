@@ -125,7 +125,33 @@ function overrideFinancialAppDisplays() {
       opacity: 0 !important;
     }
     
-    /* Use JavaScript to insert dots for these fields instead of CSS */
+    /* Strong masking for Monarch Money budget page */
+    td[data-testid] span:not(.monarch-mask-overlay) {
+      color: transparent !important;
+    }
+    
+    /* Hide balance numbers completely */
+    [class*="balance"] span:not(.monarch-mask-overlay),
+    [class*="spending"] span:not(.monarch-mask-overlay),
+    [class*="value"] span:not(.monarch-mask-overlay),
+    [class*="amount"] span:not(.monarch-mask-overlay),
+    h1, h2, h3, h4 {
+      color: transparent !important;
+    }
+    
+    /* Target the top-right budget summary box */
+    [class*="budget"] h1, 
+    [class*="budget"] h2, 
+    [class*="budget"] h3,
+    [class*="budget"] span,
+    [class*="remaining"] span {
+      color: transparent !important;
+    }
+    
+    /* Blanket approach for all table cells */
+    td > div > span:not(.monarch-mask-overlay) {
+      color: transparent !important;
+    }
   `;
   document.head.appendChild(style);
   
