@@ -105,7 +105,7 @@ function overrideFinancialAppDisplays() {
   const monarchInputs = document.querySelectorAll('input[class*="CurrencyInput"], input[class*="AmountInput"], input[name="budgeted"], input.fs-exclude');
   
   // Target the special animated digit display in Monarch Money
-  const specialDigitElements = document.querySelectorAll('.number__inner, .digit, .digit__num, [part="digit"], [part="integer"], [part="fraction"]');
+  const specialDigitElements = document.querySelectorAll('.number__inner, [part="digit"], [part="integer"], [part="fraction"]');
   
   // Process animated digit displays
   specialDigitElements.forEach(element => {
@@ -140,11 +140,17 @@ function overrideFinancialAppDisplays() {
             container.style.position = 'relative';
           }
           
-          // Make all digit elements transparent instead of hiding them
-          const digitElements = container.querySelectorAll('.digit, .digit__num, .number__inner');
-          digitElements.forEach(digitEl => {
-            digitEl.style.color = 'transparent';
-          });
+          // Make the number__inner element itself transparent
+          const numberInner = container.querySelector('.number__inner');
+          if (numberInner) {
+            numberInner.style.color = 'transparent';
+          } else {
+            // Fallback to making individual digit elements transparent
+            const digitElements = container.querySelectorAll('.digit, .digit__num');
+            digitElements.forEach(digitEl => {
+              digitEl.style.color = 'transparent';
+            });
+          }
           
           container.appendChild(maskContainer);
         }
