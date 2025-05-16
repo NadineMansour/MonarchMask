@@ -239,8 +239,21 @@ function shouldProcessNode(node) {
   }
   
   // Skip elements with contenteditable attribute
-  if (node.hasAttribute('contenteditable')) {
+  if (node.hasAttribute('contenteditable') || 
+      node.getAttribute('contenteditable') === 'true' ||
+      node.getAttribute('contenteditable') === '') {
     return false;
+  }
+  
+  // Check if this element or any parent has contenteditable
+  let parent = node.parentElement;
+  while (parent) {
+    if (parent.hasAttribute('contenteditable') || 
+        parent.getAttribute('contenteditable') === 'true' ||
+        parent.getAttribute('contenteditable') === '') {
+      return false;
+    }
+    parent = parent.parentElement;
   }
   
   // Skip password fields
