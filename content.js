@@ -80,7 +80,7 @@ function overrideFinancialAppDisplays() {
     input[class*="AmountInput"],
     input[name="budgeted"],
     input.fs-exclude {
-      color: transparent !important;
+      opacity: 0 !important;
     }
     
     /* Use JavaScript to insert dots for these fields instead of CSS */
