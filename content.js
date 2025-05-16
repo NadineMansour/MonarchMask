@@ -91,9 +91,46 @@ function overrideFinancialAppDisplays() {
     // Skip already masked or very large text blocks
     if (!hasNumber || text.length > 50) return;
     
-    // Skip form inputs and editable fields
-    if (element.tagName === 'INPUT' || 
-        element.tagName === 'TEXTAREA' || 
+    // For input elements, we need to handle them differently
+    if (element.tagName === 'INPUT') {
+      // Only mask read-only inputs - these are often used for display
+      if (element.hasAttribute('readonly') || element.getAttribute('type') === 'text') {
+        // Create a wrapper around the input if needed
+        if (!element.parentElement.classList.contains('cipher-input-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'cipher-input-wrapper';
+          wrapper.style.position = 'relative';
+          element.parentNode.insertBefore(wrapper, element);
+          wrapper.appendChild(element);
+        }
+        
+        // Apply masking overlay
+        if (!element.nextElementSibling || !element.nextElementSibling.classList.contains('cipher-input-mask')) {
+          const overlay = document.createElement('div');
+          overlay.className = 'cipher-input-mask';
+          overlay.textContent = '•••';
+          overlay.style.position = 'absolute';
+          overlay.style.left = '0';
+          overlay.style.top = '0';
+          overlay.style.width = '100%';
+          overlay.style.height = '100%';
+          overlay.style.display = 'flex';
+          overlay.style.alignItems = 'center';
+          overlay.style.padding = '0 8px';
+          overlay.style.pointerEvents = 'none';
+          overlay.style.zIndex = '1000';
+          overlay.style.backgroundColor = 'inherit';
+          element.parentNode.insertBefore(overlay, element.nextSibling);
+          
+          // Hide the actual input text
+          element.style.color = 'transparent';
+        }
+      }
+      return;
+    }
+    
+    // Skip other form elements and editable fields
+    if (element.tagName === 'TEXTAREA' || 
         element.tagName === 'SELECT' ||
         element.hasAttribute('contenteditable')) {
       return;
