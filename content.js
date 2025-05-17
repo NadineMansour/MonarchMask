@@ -365,52 +365,22 @@ function maskTableData() {
 // Process all text inside an element directly
 function processTextInElement(element) {
   if (!element || !shouldProcessNode(element)) return;
-  
-  // Apply the same regex from processTextNode function
-  const basicNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
-  const digitSequenceRegex = /\d+/g;
-  
-  // Handle immediate text in this element (not in children)
+
+  // Handle immediate text nodes
   for (const node of element.childNodes) {
     if (node.nodeType === Node.TEXT_NODE) {
-      let text = node.textContent;
-      let hasNumbers = false;
-      
-      if (basicNumberRegex.test(text)) {
-        text = text.replace(basicNumberRegex, '•••');
-        hasNumbers = true;
-      }
-      
-      // If still contains digits, use the more aggressive approach
-      if (/\d/.test(text)) {
-        text = text.replace(digitSequenceRegex, '•••');
-        hasNumbers = true;
-      }
-      
-      if (hasNumbers) {
-        node.textContent = text;
+      const masked = maskText(node.textContent);
+      if (masked !== node.textContent) {
+        node.textContent = masked;
       }
     }
   }
-  
-  // In case the element has no child text nodes but has direct textContent
+
+  // Process direct text content
   if (element.childNodes.length === 0 && element.textContent.trim() !== '') {
-    let text = element.textContent;
-    let hasNumbers = false;
-    
-    if (basicNumberRegex.test(text)) {
-      text = text.replace(basicNumberRegex, '•••');
-      hasNumbers = true;
-    }
-    
-    // If still contains digits, use the more aggressive approach
-    if (/\d/.test(text)) {
-      text = text.replace(digitSequenceRegex, '•••');
-      hasNumbers = true;
-    }
-    
-    if (hasNumbers) {
-      element.textContent = text;
+    const masked = maskText(element.textContent);
+    if (masked !== element.textContent) {
+      element.textContent = masked;
     }
   }
 }
@@ -639,35 +609,15 @@ function processNode(node) {
 // Process a text node to mask numbers
 function processTextNode(node) {
   if (!node || !node.textContent) return;
-  
+
   // Skip if parent element should not be processed
   if (node.parentElement && !shouldProcessNode(node.parentElement)) {
     return;
   }
-  
-  // First check: Basic number formats with currency symbols and decimals
-  const basicNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
-  
-  // Second check: Any standalone digit sequence (very aggressive)
-  const digitSequenceRegex = /\d+/g;
-  
-  // Replace all occurrences with the mask
-  let text = node.textContent;
-  let hasNumbers = false;
-  
-  if (basicNumberRegex.test(text)) {
-    text = text.replace(basicNumberRegex, '•••');
-    hasNumbers = true;
-  }
-  
-  // If still contains digits, use the more aggressive approach
-  if (/\d/.test(text)) {
-    text = text.replace(digitSequenceRegex, '•••');
-    hasNumbers = true;
-  }
-  
-  if (hasNumbers) {
-    node.textContent = text;
+
+  const masked = maskText(node.textContent);
+  if (masked !== node.textContent) {
+    node.textContent = masked;
   }
 }
 
