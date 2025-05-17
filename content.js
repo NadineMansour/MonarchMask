@@ -311,10 +311,9 @@ function overrideFinancialAppDisplays() {
       return;
     }
     
-    // Check if the element might be a financial value
+    // Check if the element might be a financial value (only currency and percentage)
     const isCurrencyValue = 
       /^\s*\$\s*\d/.test(text) || // Starts with $ followed by number
-      /^\s*\d+([.,]\d+)*(\.\d+)?\s*$/.test(text) || // Just a number
       /^\s*\d+([.,]\d+)*(\.\d+)?\s*%\s*$/.test(text); // Percentage
     
     if (isCurrencyValue) {
@@ -366,9 +365,9 @@ function maskTableData() {
 function processTextInElement(element) {
   if (!element || !shouldProcessNode(element)) return;
   
-  // Apply the same regex from processTextNode function
-  const basicNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
-  const digitSequenceRegex = /\d+/g;
+  // Only mask numbers with currency symbols ($, €, £, ¥) or percentage signs (%)
+  // This targets specifically sensitive financial data
+  const sensitiveNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?\s*%/g;
   
   // Handle immediate text in this element (not in children)
   for (const node of element.childNodes) {
@@ -376,14 +375,8 @@ function processTextInElement(element) {
       let text = node.textContent;
       let hasNumbers = false;
       
-      if (basicNumberRegex.test(text)) {
-        text = text.replace(basicNumberRegex, '•••');
-        hasNumbers = true;
-      }
-      
-      // If still contains digits, use the more aggressive approach
-      if (/\d/.test(text)) {
-        text = text.replace(digitSequenceRegex, '•••');
+      if (sensitiveNumberRegex.test(text)) {
+        text = text.replace(sensitiveNumberRegex, '•••');
         hasNumbers = true;
       }
       
@@ -398,14 +391,8 @@ function processTextInElement(element) {
     let text = element.textContent;
     let hasNumbers = false;
     
-    if (basicNumberRegex.test(text)) {
-      text = text.replace(basicNumberRegex, '•••');
-      hasNumbers = true;
-    }
-    
-    // If still contains digits, use the more aggressive approach
-    if (/\d/.test(text)) {
-      text = text.replace(digitSequenceRegex, '•••');
+    if (sensitiveNumberRegex.test(text)) {
+      text = text.replace(sensitiveNumberRegex, '•••');
       hasNumbers = true;
     }
     
@@ -645,24 +632,16 @@ function processTextNode(node) {
     return;
   }
   
-  // First check: Basic number formats with currency symbols and decimals
-  const basicNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?(?:\s*%)?/g;
+  // Only mask numbers with currency symbols ($, €, £, ¥) or percentage signs (%)
+  // This targets specifically sensitive financial data
+  const sensitiveNumberRegex = /(\$|€|£|¥)\s*\d+(?:[.,]\d+)*(?:\.\d+)?|\b\d+(?:[.,]\d+)*(?:\.\d+)?\s*%/g;
   
-  // Second check: Any standalone digit sequence (very aggressive)
-  const digitSequenceRegex = /\d+/g;
-  
-  // Replace all occurrences with the mask
+  // Replace only sensitive numbers with the mask
   let text = node.textContent;
   let hasNumbers = false;
   
-  if (basicNumberRegex.test(text)) {
-    text = text.replace(basicNumberRegex, '•••');
-    hasNumbers = true;
-  }
-  
-  // If still contains digits, use the more aggressive approach
-  if (/\d/.test(text)) {
-    text = text.replace(digitSequenceRegex, '•••');
+  if (sensitiveNumberRegex.test(text)) {
+    text = text.replace(sensitiveNumberRegex, '•••');
     hasNumbers = true;
   }
   
