@@ -7,8 +7,8 @@ Ever want to dig into personal-finance setups with friends or family but don't w
 
 ## Features
 - **Selective masking**: Only masks numbers with currency or percentage symbols
-- **Simple toggle**: Easy to enable/disable as needed.
-- **Non-intrusive**: Only affects visual display, not the actual data.
+- **Simple toggle**: Easy to enable/disable as needed
+- **Non-intrusive**: Only affects visual display, not the actual data
 
 ## Installation Instructions
 
