@@ -1,22 +1,14 @@
 # MonarchMask Browser Extension
 
 ## Overview
-MonarchMask is a browser extension that provides intelligent numeric privacy protection when screen sharing and browsing sensitive content. It selectively masks financial and personal data to maintain your privacy without disrupting your browsing experience.
-
-## Problem Solved
-When sharing your screen during presentations, video calls, or recordings, you might accidentally expose sensitive financial information like account balances, transaction amounts, or budget numbers. MonarchMask solves this problem by automatically masking:
-
+Ever want to dig into personal-finance setups with friends or family but don't want to show your Monarch Money balances? This extension has you covered. It automatically masks:
 - Numbers with currency symbols ($, €, £, ¥)
-- Numbers with percentage signs (%)
-
-While leaving other numbers (dates, product IDs, etc.) visible for a better browsing experience.
+- Numbers followed by a percent sign (%)
 
 ## Features
-- **Selective Masking**: Only masks numbers with currency or percentage symbols
-- **Intelligent Detection**: Recognizes financial data in various formats
-- **Focus on Privacy**: Specifically designed for financial applications and websites like Monarch Money
-- **Simple Toggle**: Easy to enable/disable as needed
-- **Non-intrusive**: Only affects visual display, not the actual data
+- **Selective masking**: Only masks numbers with currency or percentage symbols
+- **Simple toggle**: Easy to enable/disable as needed.
+- **Non-intrusive**: Only affects visual display, not the actual data.
 
 ## Installation Instructions
 
@@ -34,10 +26,10 @@ While leaving other numbers (dates, product IDs, etc.) visible for a better brow
 ### Using the Extension
 1. Click the MonarchMask icon in your browser toolbar to open the popup
 2. Toggle the extension on or off as needed
-3. When visiting financial websites, especially Monarch Money, the extension will automatically mask currency values and percentages
+3. When visiting Monarch Money, the extension will automatically mask currency values and percentages
 
 ## Compatibility
-MonarchMask is designed specifically for Chrome. It works on any website but has enhanced functionality on financial websites and applications, with special optimizations for Monarch Money.
+MonarchMask is designed specifically for Chrome based browsers.
 
 ## Privacy
 MonarchMask operates entirely within your browser and does not collect, store, or transmit any data. All masking is done locally on your device.
